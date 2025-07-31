@@ -39,9 +39,8 @@ const RegisterPage = () => {
   };
 
   const handleChange = (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     let { id, value, type, checked } = event.target;
-    console.log("checked>>>", checked);
     if (id === "confirmPassword" && passwordError) setPasswordError("");
     if (type === "checkbox") {
       if (policyError) setPolicyError(false);
