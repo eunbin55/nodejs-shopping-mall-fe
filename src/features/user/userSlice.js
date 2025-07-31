@@ -25,6 +25,7 @@ export const registerUser = createAsyncThunk(
       const res = await api.post("/user", { email, name, password, navigate });
       if (res.status === 200) {
         navigate("/login");
+        dispatch(clearErrors());
       } else {
         throw new Error();
       }
