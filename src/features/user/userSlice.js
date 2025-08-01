@@ -16,21 +16,37 @@ export const loginWithGoogle = createAsyncThunk(
 
 export const logout = () => (dispatch) => {};
 export const registerUser = createAsyncThunk(
-  "user/registerUser",
+  "user/registerUser", // 액션네임
   async (
     { email, name, password, navigate },
     { dispatch, rejectWithValue }
   ) => {
     try {
-      const res = await api.post("/user", { email, name, password, navigate });
-      if (res.status === 200) {
-        navigate("/login");
-        dispatch(clearErrors());
-      } else {
-        throw new Error();
-      }
+      // api 호출 -> 미들웨어에서 api를 호출하는 작업
+      const res = await api.post("/user", { email, name, password });
+      // 성공
+      // 1. 성공 토스트 메시지 보여주기
+      // uiSlice에 있는 reducer action 호출
+      dispatch(
+        showToastMessage({
+          message: "회원가입에 성공했습니다.",
+          status: "success",
+        })
+      );
+      // 2. 로그인 페이지로 리다이렉트
+      navigate("/login");
+      return res.data.data;
     } catch (error) {
-      return dispatch(setRegistrationError(error.message));
+      // 실패
+      // 1. 실패 토스트 메시지 보여주기
+      dispatch(
+        showToastMessage({
+          message: error.message || "회원가입에 실패했습니다.",
+          status: "error",
+        })
+      );
+      // 2. 에러 저장
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -53,23 +69,20 @@ const userSlice = createSlice({
       state.loginError = null;
       state.registrationError = null;
     },
-    setRegistrationError: (state, action) => {
-      state.registrationError = action.payload;
-    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
+      .addCase(registerUser.fulfilled, (state) => {
         state.loading = false;
+        state.registrationError = null;
       })
       .addCase(registerUser.rejected, (state, action) => {
-        state.loading = false;
         state.registrationError = action.payload;
       });
   },
 });
-export const { clearErrors, setRegistrationError } = userSlice.actions;
+export const { clearErrors } = userSlice.actions;
 export default userSlice.reducer;
