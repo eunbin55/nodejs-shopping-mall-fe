@@ -62,7 +62,7 @@ const Login = () => {
             />
           </Form.Group>
           <div className="display-space-between login-button-area">
-            <Button variant="danger" type="submit">
+            <Button variant="dark" type="submit">
               Login
             </Button>
             <div>
