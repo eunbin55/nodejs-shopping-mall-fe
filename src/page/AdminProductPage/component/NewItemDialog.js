@@ -64,15 +64,17 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    dispatch(clearError());
     //재고를 입력했는지 확인, 아니면 에러
     if (stock.length === 0) return setStockError(true);
     // 재고를 배열에서 객체로 바꿔주기
+    // ex) stock = [["s":"2"],["m":"6"],["l":"3"]]
     const totalStock = stock.reduce((total, item) => {
       return { ...total, [item[0]]: parseInt(item[1]) };
     }, {});
-    // [['M',2]] 에서 {M:2}로
     if (mode === "new") {
       //새 상품 만들기
+      dispatch(createProduct({ ...formData, stock: totalStock }));
     } else {
       // 상품 수정하기
     }
@@ -132,6 +134,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
   const uploadImage = (url) => {
     //이미지 업로드
+    if (error) dispatch(clearError());
     setFormData({ ...formData, image: url });
   };
 
@@ -257,7 +260,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
             id="uploadedimage"
             src={formData.image}
             className="upload-image mt-2"
-            alt="uploadedimage"
+            alt=""
           ></img>
         </Form.Group>
 
