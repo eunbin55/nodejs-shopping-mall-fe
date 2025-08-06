@@ -23,7 +23,7 @@ const Navbar = ({ user }) => {
     "남성",
     "신생아/유아",
     "아동",
-    "H&M HOME",
+    "ZARA HOME",
     "Sale",
     "지속가능성",
   ];
@@ -42,6 +42,7 @@ const Navbar = ({ user }) => {
   };
   return (
     <div>
+      {/* 모바일 버전 검색창 */}
       {showSearchBox && (
         <div className="display-space-between mobile-search-box w-100">
           <div className="search display-space-between w-100">

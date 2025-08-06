@@ -7,9 +7,9 @@ export const getProductList = createAsyncThunk(
   "products/getProductList",
   async (query, { rejectWithValue }) => {
     try {
-      const res = await api.get("/product");
+      const res = await api.get("/product", { params: { ...query } });
       if (res.status !== 200) throw new Error(res.error);
-      return res.data.products;
+      return res.data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -71,7 +71,6 @@ const productSlice = createSlice({
     clearError: (state) => {
       state.error = "";
       state.success = false;
-      console.log("clear");
     },
   },
   extraReducers: (builder) => {
@@ -94,8 +93,9 @@ const productSlice = createSlice({
       })
       .addCase(getProductList.fulfilled, (state, action) => {
         state.loading = false;
-        state.productList = action.payload;
+        state.productList = action.payload.data;
         state.error = "";
+        state.totalPageNum = action.payload.totalPageNum;
       })
       .addCase(getProductList.rejected, (state, action) => {
         state.loading = false;
