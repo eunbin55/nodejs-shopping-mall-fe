@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Container, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import ReactPaginate from "react-paginate";
 import SearchBox from "../../common/component/SearchBox";
 import NewItemDialog from "./component/NewItemDialog";
 import ProductTable from "./component/ProductTable";
@@ -12,6 +11,7 @@ import {
   setSelectedProduct,
 } from "../../features/product/productSlice";
 import { Paginate } from "../../common/component/Paginate";
+import { NoSearchData } from "../../common/component/NoSearchData";
 
 const AdminProductPage = () => {
   const navigate = useNavigate();
@@ -87,18 +87,23 @@ const AdminProductPage = () => {
         <Button className="mt-2 mb-2" onClick={handleClickNewItem}>
           Add New Item +
         </Button>
-
-        <ProductTable
-          header={tableHeader}
-          data={productList}
-          deleteItem={deleteItem}
-          openEditForm={openEditForm}
-        />
-        <Paginate
-          handlePageClick={handlePageClick}
-          totalPageNum={totalPageNum}
-          searchQuery={searchQuery}
-        />
+        {searchQuery.name !== "" && productList.length === 0 ? (
+          <NoSearchData searchKeyword={searchQuery.name} />
+        ) : (
+          <>
+            <ProductTable
+              header={tableHeader}
+              data={productList}
+              deleteItem={deleteItem}
+              openEditForm={openEditForm}
+            />
+            <Paginate
+              handlePageClick={handlePageClick}
+              totalPageNum={totalPageNum}
+              searchQuery={searchQuery}
+            />
+          </>
+        )}
       </Container>
 
       <NewItemDialog
