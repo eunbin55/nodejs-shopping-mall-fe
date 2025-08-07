@@ -33,6 +33,7 @@ export const createProduct = createAsyncThunk(
           status: "success",
         })
       );
+      dispatch(getProductList({ page: 1 }));
       return res.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -42,12 +43,42 @@ export const createProduct = createAsyncThunk(
 
 export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
-  async (id, { dispatch, rejectWithValue }) => {}
+  async (id, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await api.delete(`/product/${id}`);
+      if (res.status !== 200) throw new Error(res.error);
+      dispatch(
+        showToastMessage({
+          status: "success",
+          message: "상품이 삭제되었습니다.",
+        })
+      );
+      dispatch(getProductList({ page: 1 }));
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
 );
 
 export const editProduct = createAsyncThunk(
   "products/editProduct",
-  async ({ id, ...formData }, { dispatch, rejectWithValue }) => {}
+  async ({ id, ...formData }, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await api.put(`/product/${id}`, formData);
+      if (res.status !== 200) throw new Error(res.error);
+      dispatch(
+        showToastMessage({
+          status: "success",
+          message: "상품 수정에 성공했습니다.",
+        })
+      );
+      dispatch(getProductList({ page: 1 }));
+      return res.data.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
 );
 
 // 슬라이스 생성
@@ -98,6 +129,30 @@ const productSlice = createSlice({
         state.totalPageNum = action.payload.totalPageNum;
       })
       .addCase(getProductList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(editProduct.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(editProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = "";
+        state.success = true;
+      })
+      .addCase(editProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
+      })
+      .addCase(deleteProduct.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = "";
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

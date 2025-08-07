@@ -77,6 +77,9 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
       dispatch(createProduct({ ...formData, stock: totalStock }));
     } else {
       // 상품 수정하기
+      dispatch(
+        editProduct({ ...formData, stock: totalStock, id: selectedProduct._id })
+      );
     }
   };
 
@@ -162,6 +165,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
               placeholder="Enter Sku"
               required
               value={formData.sku}
+              disabled={mode === "edit"}
             />
           </Form.Group>
 
@@ -236,6 +240,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
                     placeholder="number of stock"
                     value={item[1]}
                     required
+                    min={0}
                   />
                 </Col>
                 <Col sm={2}>
