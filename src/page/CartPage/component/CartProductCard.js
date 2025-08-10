@@ -25,12 +25,11 @@ const CartProductCard = ({ item }) => {
         <Col md={10} xs={12}>
           <div className="display-flex space-between">
             <h3>{item.productId.name}</h3>
-            <button className="trash-button">
-              <FontAwesomeIcon
-                icon={faTrash}
-                width={24}
-                onClick={() => deleteCart(item._id)}
-              />
+            <button
+              className="trash-button"
+              onClick={() => deleteCart(item._id)}
+            >
+              <FontAwesomeIcon icon={faTrash} width={24} />
             </button>
           </div>
 
