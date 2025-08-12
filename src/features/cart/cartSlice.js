@@ -87,10 +87,11 @@ export const getCartQty = createAsyncThunk(
   "cart/getCartQty",
   async (_, { rejectWithValue, dispatch }) => {
     try {
-      const action = await dispatch(getCartList());
-      const cartQty = action.payload.length;
-      return cartQty;
+      const res = await api.get("/cart/qty");
+      if (res.status !== 200) throw new Error(res.error);
+      return res.data.qty;
     } catch (error) {
+      dispatch(showToastMessage({ status: "error", message: error.message }));
       return rejectWithValue(error.message);
     }
   }
