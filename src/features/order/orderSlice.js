@@ -16,12 +16,15 @@ const initialState = {
 // Async thunks
 export const createOrder = createAsyncThunk(
   "order/createOrder",
-  async (payload, { dispatch, rejectWithValue }) => {
+  async ({ orderData, navigate }, { dispatch, rejectWithValue }) => {
     try {
-      const res = await api.post("/order", payload);
+      const res = await api.post("/order", orderData);
       if (res.status !== 200) throw new Error(res.error);
+      dispatch(getCartQty());
       return res.data.orderNum;
     } catch (error) {
+      dispatch(showToastMessage({ status: "error", message: error.message }));
+      if (error.status === "out of stock") navigate("/cart");
       return rejectWithValue(error.message);
     }
   }
