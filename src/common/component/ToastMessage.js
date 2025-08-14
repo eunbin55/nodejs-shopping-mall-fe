@@ -11,7 +11,10 @@ const ToastMessage = () => {
     if (toastMessage) {
       const { message, status } = toastMessage;
       if (message !== "" && status !== "") {
-        toast[status](message, { theme: "colored" });
+        toast[status](message, {
+          theme: "colored",
+          style: { "white-space": "pre-line" },
+        });
       }
     }
   }, [toastMessage]);
