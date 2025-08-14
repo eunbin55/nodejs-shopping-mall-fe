@@ -10,7 +10,7 @@ const OrderStatusCard = ({ orderItem }) => {
         <Col xs={2}>
           <img
             src={orderItem.items[0]?.productId?.image}
-            alt={orderItem.items[0]?.productId?.image}
+            alt={""}
             height={96}
           />
         </Col>

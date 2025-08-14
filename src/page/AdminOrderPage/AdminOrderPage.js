@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import ReactPaginate from "react-paginate";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import OrderDetailDialog from "./component/OrderDetailDialog";
 import OrderTable from "./component/OrderTable";
@@ -11,6 +10,7 @@ import {
   setSelectedOrder,
 } from "../../features/order/orderSlice";
 import "./style/adminOrder.style.css";
+import { Paginate } from "../../common/component/Paginate";
 
 const AdminOrderPage = () => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const AdminOrderPage = () => {
   const { orderList, totalPageNum } = useSelector((state) => state.order);
   const [searchQuery, setSearchQuery] = useState({
     page: query.get("page") || 1,
-    ordernum: query.get("ordernum") || "",
+    orderNum: query.get("orderNum") || "",
   });
   const [open, setOpen] = useState(false);
 
@@ -33,14 +33,13 @@ const AdminOrderPage = () => {
     "Total Price",
     "Status",
   ];
-
   useEffect(() => {
     dispatch(getOrderList({ ...searchQuery }));
   }, [query]);
 
   useEffect(() => {
-    if (searchQuery.ordernum === "") {
-      delete searchQuery.ordernum;
+    if (searchQuery.orderNum === "") {
+      delete searchQuery.orderNum;
     }
     const params = new URLSearchParams(searchQuery);
     const queryString = params.toString();
@@ -69,7 +68,7 @@ const AdminOrderPage = () => {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             placeholder="오더번호"
-            field="ordernum"
+            field="orderNum"
           />
         </div>
 
@@ -78,26 +77,10 @@ const AdminOrderPage = () => {
           data={orderList}
           openEditForm={openEditForm}
         />
-        <ReactPaginate
-          nextLabel="next >"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          pageCount={totalPageNum}
-          forcePage={searchQuery.page - 1}
-          previousLabel="< previous"
-          renderOnZeroPageCount={null}
-          pageClassName="page-item"
-          pageLinkClassName="page-link"
-          previousClassName="page-item"
-          previousLinkClassName="page-link"
-          nextClassName="page-item"
-          nextLinkClassName="page-link"
-          breakLabel="..."
-          breakClassName="page-item"
-          breakLinkClassName="page-link"
-          containerClassName="pagination"
-          activeClassName="active"
-          className="display-center list-style-none"
+        <Paginate
+          handlePageClick={handlePageClick}
+          searchQuery={searchQuery}
+          totalPageNum={totalPageNum}
         />
       </Container>
 

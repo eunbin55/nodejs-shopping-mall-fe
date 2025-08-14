@@ -24,7 +24,7 @@ const PaymentForm = ({
           <Form.Control
             type="tel"
             name="number"
-            placeholder="Card Number"
+            placeholder="카드 번호"
             onChange={handlePaymentInfoChange}
             onFocus={handleInputFocus}
             required
@@ -36,7 +36,7 @@ const PaymentForm = ({
           <Form.Control
             type="text"
             name="name"
-            placeholder="Name"
+            placeholder="이름"
             onChange={handlePaymentInfoChange}
             onFocus={handleInputFocus}
             required

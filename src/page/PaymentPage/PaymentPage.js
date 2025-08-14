@@ -31,7 +31,12 @@ const PaymentPage = () => {
   });
 
   useEffect(() => {
-    // 오더번호를 받으면 어디로 갈까?
+    // useEffect가 처음 호출될때 오더 성공페이지로 넘어가는걸 막기 위해
+    if (firstLoading) {
+      setFirstLoading(false);
+    } else {
+      if (orderNum !== "") navigate("/payment/success");
+    }
   }, [orderNum]);
 
   const handleSubmit = (event) => {
@@ -126,19 +131,9 @@ const PaymentPage = () => {
                   />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formGridAddress2">
-                  <Form.Label>주소</Form.Label>
-                  <Form.Control
-                    placeholder="Apartment, studio, or floor"
-                    onChange={handleFormChange}
-                    required
-                    name="address"
-                  />
-                </Form.Group>
-
                 <Row className="mb-3">
                   <Form.Group as={Col} controlId="formGridCity">
-                    <Form.Label>City</Form.Label>
+                    <Form.Label>도시명</Form.Label>
                     <Form.Control
                       onChange={handleFormChange}
                       required
@@ -147,7 +142,7 @@ const PaymentPage = () => {
                   </Form.Group>
 
                   <Form.Group as={Col} controlId="formGridZip">
-                    <Form.Label>Zip</Form.Label>
+                    <Form.Label>우편번호</Form.Label>
                     <Form.Control
                       onChange={handleFormChange}
                       required
@@ -155,6 +150,17 @@ const PaymentPage = () => {
                     />
                   </Form.Group>
                 </Row>
+
+                <Form.Group className="mb-3" controlId="formGridAddress2">
+                  <Form.Label>주소</Form.Label>
+                  <Form.Control
+                    placeholder="상세주소(구, 동, 건물명)"
+                    onChange={handleFormChange}
+                    required
+                    name="address"
+                  />
+                </Form.Group>
+
                 <div className="mobile-receipt-area">
                   <OrderReceipt cartList={cartList} totalPrice={totalPrice} />
                 </div>
