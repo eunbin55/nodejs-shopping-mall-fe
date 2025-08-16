@@ -46,7 +46,7 @@ const OrderReceipt = ({ cartList, totalPrice }) => {
         확인되지 않습니다.
         <div>
           30일의 반품 가능 기간, 반품 수수료 및 미수취시 발생하는 추가 배송 요금
-          읽어보기 반품 및 환불
+          읽어보기
         </div>
       </div>
     </div>

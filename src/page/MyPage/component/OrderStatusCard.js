@@ -1,9 +1,19 @@
 import React from "react";
-import { Row, Col, Badge } from "react-bootstrap";
+import { Row, Col, Badge, Button } from "react-bootstrap";
 import { badgeBg } from "../../../constants/order.constants";
 import { currencyFormat } from "../../../utils/number";
+import { useDispatch } from "react-redux";
+import { deleteOrder } from "../../../features/order/orderSlice";
 
 const OrderStatusCard = ({ orderItem }) => {
+  const dispatch = useDispatch();
+  const onCancelOrder = (id) => {
+    if (window.confirm("주문을 취소하시겠습니까?")) {
+      dispatch(deleteOrder({ id }));
+    } else {
+      return;
+    }
+  };
   return (
     <div>
       <Row className="status-card">
@@ -30,6 +40,16 @@ const OrderStatusCard = ({ orderItem }) => {
         <Col md={2} className="vertical-middle">
           <div className="text-align-center text-12">주문상태</div>
           <Badge bg={badgeBg[orderItem.status]}>{orderItem.status}</Badge>
+          {orderItem.status === "preparing" && (
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              className="order-cancel"
+              onClick={() => onCancelOrder(orderItem._id)}
+            >
+              주문취소
+            </Button>
+          )}
         </Col>
       </Row>
     </div>

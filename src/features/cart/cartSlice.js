@@ -17,7 +17,7 @@ export const addToCart = createAsyncThunk(
   async ({ id, size }, { rejectWithValue, dispatch }) => {
     try {
       const res = await api.post("/cart", { productId: id, size, qty: 1 });
-      if (res.status !== 200) throw new Error(res.error);
+
       dispatch(
         showToastMessage({
           status: "success",
@@ -45,7 +45,6 @@ export const getCartList = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const res = await api.get("/cart");
-      if (res.status !== 200) throw new Error(res.error);
       return res.data.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -58,7 +57,6 @@ export const deleteCartItem = createAsyncThunk(
   async (id, { rejectWithValue, dispatch }) => {
     try {
       const res = await api.delete(`/cart/${id}`);
-      if (res.status !== 200) throw new Error(res.error);
       dispatch(getCartList());
       dispatch(getCartQty());
       return res.data;
@@ -73,7 +71,6 @@ export const updateQty = createAsyncThunk(
   async ({ id, value }, { rejectWithValue, dispatch }) => {
     try {
       const res = await api.put(`/cart/${id}`, { qty: value });
-      if (res.status !== 200) throw new Error(res.error);
       dispatch(getCartList());
 
       return res.data;
@@ -88,7 +85,6 @@ export const getCartQty = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const res = await api.get("/cart/qty");
-      if (res.status !== 200) throw new Error(res.error);
       return res.data.qty;
     } catch (error) {
       dispatch(showToastMessage({ status: "error", message: error.message }));
@@ -104,7 +100,6 @@ const cartSlice = createSlice({
     initialCart: (state) => {
       state.cartItemCount = 0;
     },
-    // You can still add reducers here for non-async actions if necessary
   },
   extraReducers: (builder) => {
     builder

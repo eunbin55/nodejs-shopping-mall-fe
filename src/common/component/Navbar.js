@@ -12,22 +12,15 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/user/userSlice";
 import { initialCart } from "../../features/cart/cartSlice";
+import { CATEGORY } from "../../constants/product.constants";
+import { getProductList } from "../../features/product/productSlice";
 
 const Navbar = ({ user }) => {
   const dispatch = useDispatch();
   const { cartItemCount } = useSelector((state) => state.cart);
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   const [showSearchBox, setShowSearchBox] = useState(false);
-  const menuList = [
-    "여성",
-    "Divided",
-    "남성",
-    "신생아/유아",
-    "아동",
-    "ZARA HOME",
-    "Sale",
-    "지속가능성",
-  ];
+  const menuList = ["All", ...CATEGORY];
   let [width, setWidth] = useState(0);
   let navigate = useNavigate();
   const onCheckEnter = (event) => {
@@ -41,6 +34,9 @@ const Navbar = ({ user }) => {
   const handleLogout = () => {
     dispatch(logout());
     dispatch(initialCart());
+  };
+  const handleFilter = (menu) => {
+    dispatch(getProductList({ category: menu.toLowerCase() }));
   };
   return (
     <div>
@@ -72,13 +68,21 @@ const Navbar = ({ user }) => {
 
         <div className="side-menu-list" id="menu-list">
           {menuList.map((menu, index) => (
-            <button key={index}>{menu}</button>
+            <button
+              key={index}
+              onClick={(event) => {
+                event.preventDefault();
+                handleFilter(menu);
+              }}
+            >
+              {menu}
+            </button>
           ))}
         </div>
       </div>
       {user && user.level === "admin" && (
         <Link to="/admin/product?page=1" className="link-area">
-          Admin page
+          관리자페이지
         </Link>
       )}
       <div className="nav-header">
@@ -131,13 +135,13 @@ const Navbar = ({ user }) => {
         </Link>
       </div>
       <div className="nav-menu-area">
-        <ul className="menu">
+        <div className="menu">
           {menuList.map((menu, index) => (
-            <li key={index}>
-              <a href="#">{menu}</a>
-            </li>
+            <button key={index} onClick={() => handleFilter(menu)}>
+              {menu}
+            </button>
           ))}
-        </ul>
+        </div>
         {!isMobile && ( // admin페이지에서 같은 search-box스타일을 쓰고있음 그래서 여기서 서치박스 안보이는것 처리를 해줌
           <div className="search-box landing-search-box ">
             <FontAwesomeIcon icon={faSearch} />

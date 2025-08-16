@@ -19,7 +19,6 @@ export const createOrder = createAsyncThunk(
   async ({ orderData, navigate }, { dispatch, rejectWithValue }) => {
     try {
       const res = await api.post("/order", orderData);
-      if (res.status !== 200) throw new Error(res.error);
       dispatch(getCartQty());
       return res.data.orderNum;
     } catch (error) {
@@ -35,7 +34,6 @@ export const getOrder = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const res = await api.get("/order");
-      if (res.status !== 200) throw new Error(res.error);
       return res.data.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -49,7 +47,6 @@ export const getOrderList = createAsyncThunk(
   async (query, { rejectWithValue, dispatch }) => {
     try {
       const res = await api.get("/order/all", { params: { ...query } });
-      if (res.status !== 200) throw new Error(res.error);
       return res.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -62,7 +59,12 @@ export const updateOrder = createAsyncThunk(
   async ({ id, status }, { dispatch, rejectWithValue }) => {
     try {
       const res = await api.put(`/order/${id}`, { status });
-      if (res.status !== 200) throw new Error(res.error);
+      dispatch(
+        showToastMessage({
+          message: "주문 상태가 업데이트 되었습니다.",
+          status: "success",
+        })
+      );
       dispatch(getOrderList({ page: 1 }));
       return res.data;
     } catch (error) {
@@ -71,6 +73,24 @@ export const updateOrder = createAsyncThunk(
   }
 );
 
+export const deleteOrder = createAsyncThunk(
+  "order/deleteOrder",
+  async ({ id }, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await api.delete(`/order/${id}`);
+      dispatch(
+        showToastMessage({
+          message: "주문이 취소되었습니다.",
+          status: "success",
+        })
+      );
+      dispatch(getOrder());
+      return res;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 // Order slice
 const orderSlice = createSlice({
   name: "order",
@@ -127,6 +147,17 @@ const orderSlice = createSlice({
         state.error = "";
       })
       .addCase(updateOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteOrder.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = "";
+      })
+      .addCase(deleteOrder.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

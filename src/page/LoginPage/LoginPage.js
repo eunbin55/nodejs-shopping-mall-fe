@@ -28,6 +28,7 @@ const Login = () => {
 
   const handleGoogleLogin = async (googleData) => {
     //구글 로그인 하기
+    dispatch(loginWithGoogle(googleData.credential));
   };
 
   if (user) {
@@ -70,7 +71,7 @@ const Login = () => {
             </div>
           </div>
 
-          {/* <div className="text-align-center mt-2">
+          <div className="text-align-center mt-2">
             <p>-외부 계정으로 로그인하기-</p>
             <div className="display-center">
               <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
@@ -82,7 +83,7 @@ const Login = () => {
                 />
               </GoogleOAuthProvider>
             </div>
-          </div> */}
+          </div>
         </Form>
       </Container>
     </>

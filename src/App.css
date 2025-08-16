@@ -21,9 +21,11 @@ body {
   list-style-type: none;
   padding: 20px;
 }
-.menu li a {
+.menu button {
   text-decoration: none;
   color: black;
+  border: none;
+  background: none;
   margin-left: 20px;
 }
 
@@ -259,4 +261,6 @@ body {
   justify-content: flex-end;
   margin-top: 20px;
   margin-right: 20px;
+  text-decoration: none;
+  color: inherit;
 }

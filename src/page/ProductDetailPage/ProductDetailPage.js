@@ -43,7 +43,7 @@ const ProductDetail = () => {
     <Container className="product-detail-card">
       <Row>
         <Col sm={6}>
-          <img src={selectedProduct.image} className="w-100" alt="image" />
+          <img src={selectedProduct.image} className="w-100" alt="" />
         </Col>
         <Col className="product-info-area" sm={6}>
           <div className="product-info">{selectedProduct.name}</div>
@@ -75,7 +75,8 @@ const ProductDetail = () => {
                     disabled={selectedProduct.stock[item] === 0}
                     key={index}
                   >
-                    {item.toUpperCase()}
+                    {item.toUpperCase() +
+                      (selectedProduct.stock[item] === 0 ? "-품절" : "")}
                   </Dropdown.Item>
                 ))}
             </Dropdown.Menu>
